@@ -9,7 +9,7 @@ namespace FruitWars.Models.Fruits
     {
         private int _speedPointsBonus = 1;
 
-        public Pear()
+        public Pear((int x, int y) position) : base(position)
         {
 
         }

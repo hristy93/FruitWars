@@ -10,7 +10,7 @@ namespace FruitWars.Models.Fruits
 
         private int _powerPointsBonus = 1;
 
-        public Apple()
+        public Apple((int x, int y) position) : base(position)
         {
 
         }

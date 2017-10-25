@@ -15,7 +15,8 @@ namespace FruitWars.GamePlay
         //private char[,] _grid;
         //private bool _isEnded = false;
 
-        public bool IsEnded { get; set; }
+        public GameStatusType Status { get; set; }
+        public Warrior Winner { get; set; }
 
         //private GridManager _gridManager;
         //private PlayersManager _playersManager;
@@ -30,20 +31,20 @@ namespace FruitWars.GamePlay
             //playersManager.PlacePlayers();
         }
 
-        public void Run()
-        {
-            //gridManager.InitiateGrid();
-        }
+        //public void Run()
+        //{
+        //    //gridManager.InitiateGrid();
+        //}
 
-        public void Reset()
-        {
+        //public void Reset()
+        //{
 
-        }
+        //}
 
-        public void PrintGrid()
-        {
-            //_gridManager.PrintGrid();
-        }
+        //public void PrintGrid()
+        //{
+        //    //_gridManager.PrintGrid();
+        //}
 
     }
 }

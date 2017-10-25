@@ -4,7 +4,12 @@ using System.Text;
 
 namespace FruitWars.Models.Warriors
 {
-    class Monkey
+    class Monkey : Warrior
     {
+        public Monkey()
+        {
+            SpeedPoints = 2;
+            PowerPoints = 2;
+        }
     }
 }

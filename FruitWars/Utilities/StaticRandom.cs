@@ -14,11 +14,9 @@ namespace FruitWars.Utilities
         private static ThreadLocal<Random> threadLocal = new ThreadLocal<Random>
             (() => new Random(Interlocked.Increment(ref _seed)));
 
-        static StaticRandom()
-        {
-            _seed = Environment.TickCount;
-        }
+        static StaticRandom() => _seed = Environment.TickCount;
 
-        public static Random Instance { get { return threadLocal.Value; } }
+
+        public static Random Instance => threadLocal.Value;
     }
 }

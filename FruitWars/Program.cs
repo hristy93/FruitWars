@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FruitWars.GamePlay;
+using System;
 
 namespace FruitWars
 {
@@ -6,7 +7,9 @@ namespace FruitWars
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Game game = new Game();
+            game.PrintGrid();
+            Console.ReadLine();
         }
     }
 }

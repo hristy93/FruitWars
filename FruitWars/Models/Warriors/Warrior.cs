@@ -1,22 +1,48 @@
-﻿using System;
+﻿using FruitWars.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace FruitWars.Models.Warriors
 {
-    class Warrior
+    public class Warrior
     {
-        /*
-Warriors:
-    – Turtle. The turtle has 1 speed point and 3 power points
-    – Monkey. The monkey has 2 speed points and 2 power points
-    – Pigeon. The pigeon has 3 speed points and 1 power point
-Fruits:
-    – Apple. Apple provides +1 power point to a warrior
-    – Pear. Pear provides +1 speed point to a warrior
-         * */
+        //private (int x, int Y) _coordinates;
 
         public int SpeedPoints { get; set; }
+
         public int PowerPoints { get; set; }
+
+        public (int X, int Y) Coordinates { get; set; }
+
+        public void Move(DirectionType direction)
+        {
+            switch (direction)
+            {
+                case DirectionType.Left:
+                    Coordinates = (Coordinates.X, Coordinates.Y - 1);
+                    break;
+
+                case DirectionType.Right:
+                    Coordinates = (Coordinates.X, Coordinates.Y + 1);
+                    break;
+
+                case DirectionType.Up:
+                    Coordinates = (Coordinates.X - 1, Coordinates.Y);
+                    break;
+
+                case DirectionType.Down:
+                    Coordinates = (Coordinates.X + 1, Coordinates.Y);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        public void EatFruit(Fruit fruit)
+        {
+            fruit.GiveBonus(this);
+        }
     }
 }

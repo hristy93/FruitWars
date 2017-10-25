@@ -1,4 +1,7 @@
-﻿using System;
+﻿using FruitWars.Models.Fruits;
+using FruitWars.Models.Warriors;
+using FruitWars.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,13 +10,29 @@ namespace FruitWars.GamePlay
     public class Game
     {
         public const int MAX_CELLS_COUNT = 8;
+        public const int PLAYERS_COUNT = 2;
 
-        private char[,] _grid;
-        private bool isEnded = false;
+        //private char[,] _grid;
+        //private bool _isEnded = false;
+
+        public bool IsEnded { get; set; }
+
+        //private GridManager _gridManager;
+        //private PlayersManager _playersManager;
+
 
         public Game()
         {
-            Initiate();
+            //Pears = new List<Pear>(INITIAL_PEARS_COUNT);
+            //Apples = new List<Apple>(INITIAL_APPLES_COUNT);
+            //_gridManager = gridManager;
+            //_playersManager = playersManager;
+            //playersManager.PlacePlayers();
+        }
+
+        public void Run()
+        {
+            //gridManager.InitiateGrid();
         }
 
         public void Reset()
@@ -23,31 +42,8 @@ namespace FruitWars.GamePlay
 
         public void PrintGrid()
         {
-            
-            for (int i = 0; i < MAX_CELLS_COUNT; i++)
-            {
-                for (int j = 0; j < MAX_CELLS_COUNT; j++)
-                {
-                    Console.Write($"{_grid[i,j]} ");
-                }
-
-                Console.WriteLine("\n");
-            }
-
+            //_gridManager.PrintGrid();
         }
-
-        private void Initiate()
-        {
-            _grid = new char[MAX_CELLS_COUNT, MAX_CELLS_COUNT];
-            for (int i = 0; i < MAX_CELLS_COUNT; i++)
-            {
-                for (int j = 0; j < MAX_CELLS_COUNT; j++)
-                {
-                    _grid[i, j] = '_';
-                }
-            }
-        }
-
 
     }
 }

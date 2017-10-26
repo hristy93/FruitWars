@@ -23,6 +23,9 @@ namespace FruitWars.Utilities
         private Game _game;
         private GridManager _gridManager;
         private Random _random = StaticRandom.Instance;
+        private const string TRIM_NAMESPACE_REGEX = @"[.\w]+\.(\w+)";
+
+
         //private Pear _eatenPear;
         //private Apple _eatenApple;
 
@@ -59,81 +62,55 @@ namespace FruitWars.Utilities
 
         private void RunGame()
         {
-            DirectionType directionType;
-            (int x, int y) oldPosition;
-            int currentSpeedPoints;
-
-            int moves = 0;
             while (_game.Status == GameStatusType.Running)
             {
-                moves = 0;
-                currentSpeedPoints = FirstPlayer.SpeedPoints;
-
-                while (moves < currentSpeedPoints)
-                {
-                    directionType = GetPlayerDirection();
-
-                    oldPosition = FirstPlayer.Position;
-                    if (FirstPlayer.Move(directionType))
-                    {
-                        EatFruits(FirstPlayer);
-
-                        _gridManager.DisplayOnGrid(oldPosition, '_');
-                        _gridManager.DisplayOnGrid(FirstPlayer.Position, '1');
-
-                        moves++;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Wrong input! Please choose a direction that you can move.");
-                    }
-
-                    //_gridManager.MovePlayer(FirstPlayer.Position, directionType);
-                    //CheckForEatenFruits(FirstPlayer, _eatenPear);
-                    //CheckForEatenFruits(FirstPlayer, _eatenApple);
-                    if (CheckHasPlayerWon(FirstPlayer))
-                    {
-                        break;
-                    }
-
-                    _gridManager.PrintGrid();
-                    PrintPlayersStatistics();
-                }
-
-                moves = 0;
-                currentSpeedPoints = SecondPlayer.SpeedPoints;
-
-                while (moves < currentSpeedPoints && _game.Status == GameStatusType.Running)
-                {
-                    directionType = GetPlayerDirection();
-
-                    oldPosition = SecondPlayer.Position;
-                    if (SecondPlayer.Move(directionType))
-                    {
-                        EatFruits(SecondPlayer);
-
-                        _gridManager.DisplayOnGrid(oldPosition, '_');
-                        _gridManager.DisplayOnGrid(SecondPlayer.Position, '2');
-                        moves++;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Wrong input! Please choose a direction that you can move.");
-                    }
-
-                    //_gridManager.MovePlayer(FirstPlayer.Position, directionType);
-                    if (CheckHasPlayerWon(FirstPlayer))
-                    {
-                        break;
-                    }
-
-                    _gridManager.PrintGrid();
-                    PrintPlayersStatistics();
-                }
+                MakeAMove(FirstPlayer);
+                MakeAMove(SecondPlayer);
             }
 
             FinilizeGame();
-            //ProposeRestart();
+        }
+
+        private void MakeAMove(Warrior player)
+        {
+            DirectionType directionType;
+            (int x, int y) oldPosition;
+            int currentSpeedPoints;
+            int moves = 0;
+
+            currentSpeedPoints = player.SpeedPoints;
+
+            while (moves < currentSpeedPoints)
+            {
+                Console.WriteLine($"{(player == FirstPlayer ? "First player" : "Second player")}, make a move please!");
+                directionType = GetPlayerDirection();
+
+                oldPosition = player.Position;
+                if (player.Move(directionType))
+                {
+                    EatFruits(FirstPlayer);
+
+                    _gridManager.DisplayOnGrid(oldPosition, GameSymbols.EMPTY_SPACE_SYMBOL);
+                    _gridManager.DisplayOnGrid(player.Position, 
+                        (player == FirstPlayer ? GameSymbols.FIRST_PLAYER_SYMBOL : GameSymbols.SECOND_PLAYER_SYMBOL));
+
+                    moves++;
+
+                    if (CheckHasPlayerWon(player))
+                    {
+                        break;
+                    }
+
+                    _gridManager.PrintGrid();
+                    PrintPlayersStatistics();
+                }
+                else
+                {
+                    Console.WriteLine("Wrong input! Please choose a direction that you can move.");
+                }
+
+                //_gridManager.MovePlayer(FirstPlayer.Position, directionType);
+            }
         }
 
         private void FinilizeGame()
@@ -157,12 +134,11 @@ namespace FruitWars.Utilities
                     //    + $" power and {SecondPlayer.SpeedPoints} speed");
                 }
 
-                Console.WriteLine($"He/She is a {Regex.Replace(_game.Winner.GetType().Name, @"[.\w]+\.(\w+)", "$1")} and has {_game.Winner.PowerPoints}"
+                Console.WriteLine($"He/She is a {Regex.Replace(_game.Winner.GetType().Name, TRIM_NAMESPACE_REGEX, "$1")} and has {_game.Winner.PowerPoints}"
                         + $" power and {_game.Winner.SpeedPoints} speed");
 
                 Console.WriteLine();
             }
-
         }
 
         //private void ProposeRestart()
@@ -219,13 +195,13 @@ namespace FruitWars.Utilities
             if (FirstPlayer.PowerPoints > SecondPlayer.PowerPoints)
             {
                 _game.Winner = FirstPlayer;
-                _gridManager.DisplayOnGrid(FirstPlayer.Position, '1');
+                _gridManager.DisplayOnGrid(FirstPlayer.Position, GameSymbols.FIRST_PLAYER_SYMBOL);
                 _game.Status = GameStatusType.Won;
             }
             else if (FirstPlayer.PowerPoints < SecondPlayer.PowerPoints)
             {
                 _game.Winner = SecondPlayer;
-                _gridManager.DisplayOnGrid(SecondPlayer.Position, '2');
+                _gridManager.DisplayOnGrid(SecondPlayer.Position, GameSymbols.SECOND_PLAYER_SYMBOL);
                 _game.Status = GameStatusType.Won;
             }
             else
@@ -430,7 +406,7 @@ namespace FruitWars.Utilities
             {
 
                 position = GetPseudoRandomPosition();
-                _gridManager.DisplayOnGrid(position, 'A');
+                _gridManager.DisplayOnGrid(position, GameSymbols.APPLE_SYMBOL);
                 Apples.Add(new Apple(position));
             }
 
@@ -438,7 +414,7 @@ namespace FruitWars.Utilities
             for (int i = 1; i <= INITIAL_PEARS_COUNT; i++)
             {
                 position = GetPseudoRandomPosition();
-                _gridManager.DisplayOnGrid(position, 'P');
+                _gridManager.DisplayOnGrid(position, GameSymbols.PEAR_SYMBOL);
                 Pears.Add(new Pear(position));
 
             }
@@ -447,9 +423,9 @@ namespace FruitWars.Utilities
         private void PlacePlayers(Warrior firstPlayer, Warrior secondPlayer)
         {
             firstPlayer.Position = GetPseudoRandomPosition();
-            _gridManager.DisplayOnGrid(firstPlayer.Position, '1');
+            _gridManager.DisplayOnGrid(firstPlayer.Position, GameSymbols.FIRST_PLAYER_SYMBOL);
             secondPlayer.Position = GetPseudoRandomPosition();
-            _gridManager.DisplayOnGrid(secondPlayer.Position, '2');
+            _gridManager.DisplayOnGrid(secondPlayer.Position, GameSymbols.SECOND_PLAYER_SYMBOL);
         }
 
         private (int x, int y) GetPseudoRandomPosition()

@@ -30,7 +30,7 @@ namespace FruitWars.Utilities
             {
                 for (int j = 0; j < Game.MAX_CELLS_COUNT; j++)
                 {
-                    _grid[i, j] = '_';
+                    _grid[i, j] = GameSymbols.EMPTY_SPACE_SYMBOL;
                 }
             }
         }

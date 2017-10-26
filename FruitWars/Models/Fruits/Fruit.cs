@@ -5,13 +5,19 @@ using System.Text;
 
 namespace FruitWars.Models
 {
-    public abstract class Fruit
+    public abstract class Fruit : Figure
     {
-        public (int X, int Y) Position { get; set; }
+        public const int INITIAL_FRUITS_DISTANCE = 2;
 
-        public Fruit((int x, int y) position)
+        //public Fruit(Point position)
+        //{
+        //    Position = position;
+        //}
+
+        public override bool IntoDeprecatedZone(Figure otherFigure)
         {
-            Position = position;
+            int distance = otherFigure is Fruit ? INITIAL_FRUITS_DISTANCE : 1;
+            return Position.IsIntoDeprecatedZone(otherFigure.Position, distance);
         }
 
         public abstract void GiveBonus(Warrior warrior);

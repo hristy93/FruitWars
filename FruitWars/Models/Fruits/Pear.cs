@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using FruitWars.Models.Warriors;
+using FruitWars.Utilities;
 
 namespace FruitWars.Models.Fruits
 {
@@ -9,9 +10,9 @@ namespace FruitWars.Models.Fruits
     {
         private int _speedPointsBonus = 1;
 
-        public Pear((int x, int y) position) : base(position)
+        public Pear() //: base(position)
         {
-
+            Symbol = GameSymbols.PEAR_SYMBOL;
         }
 
         public override void GiveBonus(Warrior warrior)

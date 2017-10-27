@@ -12,7 +12,7 @@ namespace FruitWars
             GridManager gridManager = new GridManager();
             GameManager gameManager = new GameManager(gridManager);
             gameManager.StartGame();
-            Console.ReadLine();
+            //Console.ReadLine();
         }
     }
 }

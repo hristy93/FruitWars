@@ -49,12 +49,14 @@ namespace FruitWars.Utilities
             ChooseWarriors();
             PlaceFigures();
             _gridManager.PrintGrid();
+            PrintPlayersStatistics();
             RunGame();
         }
 
         private void InitiatializeGameState()
         {
             _game = new Game();
+            Figures = new List<Figure>();
             //Pears = new List<Pear>(INITIAL_PEARS_COUNT);
             //Apples = new List<Apple>(INITIAL_APPLES_COUNT);
             //_eatenPear = null;
@@ -81,9 +83,9 @@ namespace FruitWars.Utilities
 
             currentSpeedPoints = player.SpeedPoints;
 
-            while (moves < currentSpeedPoints)
+            while (moves < currentSpeedPoints && _game.Status == GameStatusType.Running)
             {
-                PrintPlayersStatistics();
+                //PrintPlayersStatistics();
                 oldPosition = (player.Position.X, player.Position.Y);
 
                 //Console.WriteLine($"{(player == FirstPlayer ? "First player" : "Second player")}, make a move please!");
@@ -108,7 +110,7 @@ namespace FruitWars.Utilities
                     }
 
                     _gridManager.PrintGrid();
-                    //PrintPlayersStatistics();
+                    PrintPlayersStatistics();
                 }
                 else
                 {
@@ -149,32 +151,33 @@ namespace FruitWars.Utilities
 
                 //Console.WriteLine();
             }
+
+            ProposeRestart();
         }
 
-        //private void ProposeRestart()
-        //{
-        //    Console.WriteLine("Do you want to restart the game: y or n");
+        private void ProposeRestart()
+        {
+            bool isInputValid = true;
+            Console.WriteLine("Do you want to start a rematch? (y/n)");
 
-        //    bool isInputValid = true;
-        //    string userRestartInput;
-        //    do
-        //    {
-        //        var userInput = Console.ReadLine();
-        //        switch (userInput[0])
-        //        {
-        //            case 'y':
-        //                RestartGame();
-        //                break;
-        //            case 'n':
-        //                break;
-        //            default:
-        //                isInputValid = false;
-        //                Console.WriteLine("Wrong input! Please press y or n.");
-        //                break;
-        //        }
-        //    } while (!isInputValid);
-
-        //}
+            do
+            {
+                var userInput = Console.ReadLine();
+                switch (userInput[0])
+                {
+                    case 'y':
+                        Console.WriteLine(Environment.NewLine);
+                        StartGame();
+                        break;
+                    case 'n':
+                        break;
+                    default:
+                        isInputValid = false;
+                        Console.WriteLine("Wrong input! Please press y or n.");
+                        break;
+                }
+            } while (!isInputValid);
+        }
 
         public bool CheckHasPlayerWon(Warrior player)
         {
@@ -183,6 +186,7 @@ namespace FruitWars.Utilities
                 FindWinner();
                 return true;
             }
+
             return false;
         }
 
@@ -379,18 +383,24 @@ namespace FruitWars.Utilities
         private Warrior InputWarriorsTypes(char symbol)
         {
             int warriorType;
-
             bool isInputValid = false;
+
+            Console.WriteLine($"Player{symbol}, please choose a warrior.");
+            Console.WriteLine("Insert 1 for turtle / 2 for monkey / 3 for pigeon");
+
             do
             {
                 //Console.WriteLine($"You are the {(symbol == GameSymbols.FIRST_PLAYER_SYMBOL ? "first" : "second" )} player");
                 //Console.WriteLine("Please choose a warrior: [1] turtle, [2] monkey, [3] pigeon");
-                Console.WriteLine($"Player{symbol}, please choose a warrior.");
-                Console.WriteLine("Insert 1 for turtle / 2 for monkey / 3 for pigeon");
+              
                 var userInput = Console.ReadLine();
                 if (int.TryParse(userInput, out warriorType) && warriorType > 0 && warriorType < 4)
                 {
                     isInputValid = true;
+                }
+                else
+                {
+                    Console.WriteLine("Wrong input! Please enter 1, 2 or 3.");
                 }
             } while (!isInputValid);
 
@@ -409,6 +419,7 @@ namespace FruitWars.Utilities
                 default:
                     throw new IndexOutOfRangeException("Invalid Warrior type");
             }
+
             warrior.Symbol = symbol;
             return warrior;
         }
@@ -424,19 +435,23 @@ namespace FruitWars.Utilities
                 {
                     case ConsoleKey.UpArrow:
                         directionType = DirectionType.Up;
+                        isInputValid = true;
                         break;
                     case ConsoleKey.DownArrow:
                         directionType = DirectionType.Down;
+                        isInputValid = true;
                         break;
                     case ConsoleKey.LeftArrow:
                         directionType = DirectionType.Left;
+                        isInputValid = true;
                         break;
                     case ConsoleKey.RightArrow:
                         directionType = DirectionType.Right;
+                        isInputValid = true;
                         break;
                     default:
                         isInputValid = false;
-                        Console.WriteLine("Wrong input! Please press some of the arrow keys.");
+                        Console.WriteLine("\nWrong input! Please press some of the arrow keys.");
                         break;
                 }
             } while (!isInputValid);
@@ -444,10 +459,10 @@ namespace FruitWars.Utilities
             return directionType;
         }
 
-        public void RestartGame()
-        {
+        //public void RestartGame()
+        //{
 
-        }
+        //}
 
         private void PlaceFigures()
         {

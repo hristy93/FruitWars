@@ -49,8 +49,28 @@ namespace FruitWars.Utilities
 
         }
 
-        public void DisplayOnGrid(Figure figure) => _grid[figure.Position.X, figure.Position.Y] = figure.Symbol;
+        public void DisplayOnGrid(Figure figure)
+        {
+            try
+            {
+                _grid[figure.Position.X, figure.Position.Y] = figure.Symbol;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
-        public void DisplayOnGrid((int x, int y) position) => _grid[position.x, position.y] = GameSymbols.EMPTY_SPACE_SYMBOL;
+        public void DisplayOnGrid((int x, int y) position)
+        {
+            try
+            {
+                _grid[position.x, position.y] = GameSymbols.EMPTY_SPACE_SYMBOL;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

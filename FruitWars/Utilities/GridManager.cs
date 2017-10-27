@@ -12,8 +12,6 @@ namespace FruitWars.Utilities
         public const int PLAYERS_COUNT = 2;
         public const int INITIAL_PEARS_COUNT = 3;
         public const int INITIAL_APPLES_COUNT = 4;
-        //public const int INITIAL_PLAYERS_MOVE_DISTANCE = 3;
-        //public const int INITIAL_FRUITS_MOVE_DISTANCE = 2;
 
         private Random _random = StaticRandom.Instance;
         private char[,] _grid;
@@ -51,14 +49,8 @@ namespace FruitWars.Utilities
 
         }
 
-        public void DisplayOnGrid(Figure figure)
-        {
-            _grid[figure.Position.X, figure.Position.Y] = figure.Symbol;
-        }
+        public void DisplayOnGrid(Figure figure) => _grid[figure.Position.X, figure.Position.Y] = figure.Symbol;
 
-        internal void DisplayOnGrid((int x, int y) position)
-        {
-            _grid[position.x, position.y] = GameSymbols.EMPTY_SPACE_SYMBOL;
-        }
+        public void DisplayOnGrid((int x, int y) position) => _grid[position.x, position.y] = GameSymbols.EMPTY_SPACE_SYMBOL;
     }
 }

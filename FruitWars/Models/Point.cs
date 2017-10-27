@@ -44,10 +44,9 @@ namespace FruitWars.Models
             return (X == tempPoint.X && Y == tempPoint.Y);
         }
 
-        public override int GetHashCode()
-        {
-            return X ^ Y;
-        }
+        public override int GetHashCode() => X ^ Y;
+
+        public override string ToString() => $"[{X},{Y}]";
 
         /// <summary>
         /// Checks if the Point point is into the deprecated zone
@@ -81,11 +80,6 @@ namespace FruitWars.Models
             Y = tempY;
 
             return true;
-        }
-
-        public override string ToString()
-        {
-            return $"[{X},{Y}]";
         }
     }
 }

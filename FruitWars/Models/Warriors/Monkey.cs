@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FruitWars.Models.Warriors
 {
-    class Monkey : Warrior
+    public class Monkey : Warrior
     {
         public Monkey()
         {

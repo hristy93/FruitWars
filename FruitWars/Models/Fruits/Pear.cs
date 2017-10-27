@@ -10,16 +10,8 @@ namespace FruitWars.Models.Fruits
     {
         private int _speedPointsBonus = 1;
 
-        public Pear() //: base(position)
-        {
-            Symbol = GameSymbols.PEAR_SYMBOL;
-        }
+        public Pear() => Symbol = GameSymbols.PEAR_SYMBOL;
 
-        public override void GiveBonus(Warrior warrior)
-        {
-            warrior.SpeedPoints += _speedPointsBonus;
-        }
-
-
+        public override void GiveBonus(Warrior warrior) => warrior.SpeedPoints += _speedPointsBonus;
     }
 }

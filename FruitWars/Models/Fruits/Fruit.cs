@@ -9,11 +9,6 @@ namespace FruitWars.Models
     {
         public const int INITIAL_FRUITS_DISTANCE = 2;
 
-        //public Fruit(Point position)
-        //{
-        //    Position = position;
-        //}
-
         public override bool IntoDeprecatedZone(Figure otherFigure)
         {
             int distance = otherFigure is Fruit ? INITIAL_FRUITS_DISTANCE : 1;

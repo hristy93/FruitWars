@@ -10,14 +10,8 @@ namespace FruitWars.Models.Fruits
     {
         private int _powerPointsBonus = 1;
 
-        public Apple() //: base(position)
-        {
-            Symbol = GameSymbols.APPLE_SYMBOL;
-        }
+        public Apple() => Symbol = GameSymbols.APPLE_SYMBOL;
 
-        public override void GiveBonus(Warrior warrior)
-        {
-            warrior.PowerPoints += _powerPointsBonus;
-        }
+        public override void GiveBonus(Warrior warrior) => warrior.PowerPoints += _powerPointsBonus;
     }
 }

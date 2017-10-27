@@ -16,7 +16,6 @@ namespace FruitWars.Utilities
 
         static StaticRandom() => _seed = Environment.TickCount;
 
-
         public static Random Instance => threadLocal.Value;
     }
 }

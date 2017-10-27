@@ -7,7 +7,7 @@ using FruitWars.Models.Warriors;
 
 namespace FruitWars.UnitTests.Utilities
 {
-    public static partial class GridManagerFactory
+    public static class GridManagerFactory
     {
         public static GridManager Create()
         {
@@ -17,7 +17,7 @@ namespace FruitWars.UnitTests.Utilities
     }
 
     [TestClass]
-    public partial class GridManagerTest
+    public class GridManagerTest
     {
 
         public GridManager Constructor()
@@ -93,22 +93,22 @@ namespace FruitWars.UnitTests.Utilities
             Assert.IsNotNull((object)gridManager);
         }
 
-        //[ExpectedException(typeof(IndexOutOfRangeException))]
-        //[TestMethod]
-        //public void DisplayOnGridThrowsIndexOutOfRangeException710()
-        //{
-        //    GridManager gridManager;
-        //    gridManager = GridManagerFactory.Create();
-        //    Warrior s0 = new Warrior();
-        //    s0.SpeedPoints = 0;
-        //    s0.PowerPoints = 0;
-        //    Point s1 = new Point();
-        //    s1.X = int.MinValue;
-        //    s1.Y = 0;
-        //    ((Figure)s0).Position = s1;
-        //    ((Figure)s0).Symbol = '\0';
-        //     DisplayOnGrid(gridManager, (Figure)s0);
-        //}
+        [ExpectedException(typeof(IndexOutOfRangeException))]
+        [TestMethod]
+        public void DisplayOnGridThrowsIndexOutOfRangeException710()
+        {
+            GridManager gridManager;
+            gridManager = GridManagerFactory.Create();
+            Warrior s0 = new Warrior();
+            s0.SpeedPoints = 0;
+            s0.PowerPoints = 0;
+            Point s1 = new Point();
+            s1.X = int.MinValue;
+            s1.Y = 0;
+            ((Figure)s0).Position = s1;
+            ((Figure)s0).Symbol = '\0';
+            DisplayOnGrid(gridManager, (Figure)s0);
+        }
     }
 }
 

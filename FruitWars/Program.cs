@@ -9,7 +9,8 @@ namespace FruitWars
         static void Main(string[] args)
         {
             GridManager gridManager = new GridManager();
-            GameManager gameManager = new GameManager(gridManager);
+            PlayersManager playersManager = new PlayersManager();
+            GameManager gameManager = new GameManager(gridManager, playersManager);
             gameManager.StartGame();
         }
     }

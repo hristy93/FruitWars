@@ -19,16 +19,16 @@ namespace FruitWars.Utilities
 
         private Game _game;
         private GridManager _gridManager;
+        private PlayersManager _playersManager;
         private Random _random = StaticRandom.Instance;
         private const string TRIM_NAMESPACE_REGEX = @"[.\w]+\.(\w+)";
 
-        public Warrior FirstPlayer { get; set; }
-        public Warrior SecondPlayer { get; set; }
         public List<Figure> Figures { get; set; } = new List<Figure>();
 
-        public GameManager(GridManager gridManager)
+        public GameManager(GridManager gridManager, PlayersManager playersManager)
         {
             _gridManager = gridManager;
+            _playersManager = playersManager;
         }
 
         public void StartGame()
@@ -36,11 +36,11 @@ namespace FruitWars.Utilities
             InitiatializeGameState();
             _gridManager.InitiateGrid();
 
-            ChooseWarriors();
+            _playersManager.ChooseWarriors();
             PlaceFigures();
 
             _gridManager.PrintGrid();
-            PrintPlayersStatistics();
+            _playersManager.PrintPlayersStatistics();
 
             RunGame();
         }
@@ -55,14 +55,14 @@ namespace FruitWars.Utilities
         {
             while (_game.Status == GameStatusType.Running)
             {
-                MakeAMove(FirstPlayer);
-                MakeAMove(SecondPlayer);
+                MakeATurn(_playersManager.FirstPlayer);
+                MakeATurn(_playersManager.SecondPlayer);
             }
 
             FinalizeGame();
         }
 
-        private void MakeAMove(Warrior player)
+        private void MakeATurn(Warrior player)
         {
             (int x, int y) oldPosition;
             int currentSpeedPoints;
@@ -70,16 +70,16 @@ namespace FruitWars.Utilities
 
             currentSpeedPoints = player.SpeedPoints;
 
+
+            Console.WriteLine($"Player{player.Symbol}, make a move please!");
             while (moves < currentSpeedPoints && _game.Status == GameStatusType.Running)
             {
                 oldPosition = (player.Position.X, player.Position.Y);
-
-                Console.WriteLine($"Player{player.Symbol}, make a move please!");
-                DirectionType directionType = GetPlayerDirection();
+                DirectionType directionType = _playersManager.GetPlayerDirection();
 
                 if (player.Move(directionType))
                 {
-                    EatFruits(player);
+                    _playersManager.EatFruits(player, Figures);
 
                     _gridManager.DisplayOnGrid(oldPosition);
                     _gridManager.DisplayOnGrid(player);
@@ -92,7 +92,7 @@ namespace FruitWars.Utilities
                     }
 
                     _gridManager.PrintGrid();
-                    PrintPlayersStatistics();
+                    _playersManager.PrintPlayersStatistics();
                 }
                 else
                 {
@@ -103,12 +103,14 @@ namespace FruitWars.Utilities
 
         private void FinalizeGame()
         {
+            Console.WriteLine(Environment.NewLine);
+
             if (_game.Status == GameStatusType.Draw)
             {
                 Console.WriteLine("Draw game.");
             }
             else
-            {
+            {            
                 _gridManager.PrintGrid();
                 Console.WriteLine(Environment.NewLine);
                 Console.WriteLine($"Player {_game.Winner.Symbol} wins the game.");
@@ -146,7 +148,7 @@ namespace FruitWars.Utilities
 
         public bool CheckHasPlayerWon(Warrior player)
         {
-            if (FirstPlayer.Position == SecondPlayer.Position)
+            if (_playersManager.FirstPlayer.Position == _playersManager.SecondPlayer.Position)
             {
                 FindWinner();
                 return true;
@@ -157,16 +159,16 @@ namespace FruitWars.Utilities
 
         private void FindWinner()
         {
-            if (FirstPlayer.PowerPoints > SecondPlayer.PowerPoints)
+            if (_playersManager.FirstPlayer.PowerPoints > _playersManager.SecondPlayer.PowerPoints)
             {
-                _game.Winner = FirstPlayer;
-                _gridManager.DisplayOnGrid(FirstPlayer);
+                _game.Winner = _playersManager.FirstPlayer;
+                _gridManager.DisplayOnGrid(_playersManager.FirstPlayer);
                 _game.Status = GameStatusType.Won;
             }
-            else if (FirstPlayer.PowerPoints < SecondPlayer.PowerPoints)
+            else if (_playersManager.FirstPlayer.PowerPoints < _playersManager.SecondPlayer.PowerPoints)
             {
-                _game.Winner = SecondPlayer;
-                _gridManager.DisplayOnGrid(SecondPlayer);
+                _game.Winner = _playersManager.SecondPlayer;
+                _gridManager.DisplayOnGrid(_playersManager.SecondPlayer);
                 _game.Status = GameStatusType.Won;
             }
             else
@@ -177,117 +179,10 @@ namespace FruitWars.Utilities
 
         }
 
-        private void EatFruits(Warrior player)
-        {
-            Figure figure = Figures.FirstOrDefault(x => x is Fruit && x.Position == player.Position);
-            if (figure is Fruit)
-            {
-                player.EatFruit(figure as Fruit);
-                Figures.Remove(figure);
-            }
-        }
-
-        private void PrintPlayersStatistics()
-        {
-            Console.WriteLine(Environment.NewLine);
-            PrintPlayerScores(FirstPlayer);
-            PrintPlayerScores(SecondPlayer);
-            Console.WriteLine(Environment.NewLine);
-        }
-
-        private void PrintPlayerScores(Warrior player)
-        {
-            Console.WriteLine($"Player{player.Symbol}: {player.PowerPoints} Power; {player.SpeedPoints} Speed");
-        }
-
-        private void ChooseWarriors()
-        {
-            FirstPlayer = InputWarriorsTypes(GameSymbols.FIRST_PLAYER_SYMBOL);
-            SecondPlayer = InputWarriorsTypes(GameSymbols.SECOND_PLAYER_SYMBOL);
-        }
-
-        private Warrior InputWarriorsTypes(char symbol)
-        {
-            int warriorType;
-            bool isInputValid = false;
-
-            Console.WriteLine($"Player{symbol}, please choose a warrior.");
-            Console.WriteLine("Insert 1 for turtle / 2 for monkey / 3 for pigeon");
-
-            do
-            {
-                var userInput = Console.ReadLine();
-
-                if (int.TryParse(userInput, out warriorType) && warriorType > 0 && warriorType < 4)
-                {
-                    isInputValid = true;
-                }
-                else
-                {
-                    Console.WriteLine("Wrong input! Please enter 1, 2 or 3.");
-                }
-            } while (!isInputValid);
-
-            Warrior warrior = null;
-
-            switch (warriorType)
-            {
-                case 1:
-                    warrior = new Turtle();
-                    break;
-                case 2:
-                    warrior = new Monkey();
-                    break;
-                case 3:
-                    warrior = new Pigeon();
-                    break;
-                default:
-                    throw new IndexOutOfRangeException("Invalid Warrior type");
-            }
-
-            warrior.Symbol = symbol;
-            return warrior;
-        }
-
-        private DirectionType GetPlayerDirection()
-        {
-            bool isInputValid = true;
-            DirectionType directionType = DirectionType.Down;
-            do
-            {
-                ConsoleKeyInfo keyInfo = Console.ReadKey();
-                switch (keyInfo.Key)
-                {
-                    case ConsoleKey.UpArrow:
-                        directionType = DirectionType.Up;
-                        isInputValid = true;
-                        break;
-                    case ConsoleKey.DownArrow:
-                        directionType = DirectionType.Down;
-                        isInputValid = true;
-                        break;
-                    case ConsoleKey.LeftArrow:
-                        directionType = DirectionType.Left;
-                        isInputValid = true;
-                        break;
-                    case ConsoleKey.RightArrow:
-                        directionType = DirectionType.Right;
-                        isInputValid = true;
-                        break;
-                    default:
-                        isInputValid = false;
-                        Console.WriteLine("\nWrong input! Please press some of the arrow keys.");
-                        break;
-                }
-            } while (!isInputValid);
-
-            return directionType;
-        }
-
         private void PlaceFigures()
         {
-            SetFigurePosition(FirstPlayer);
-            SetFigurePosition(SecondPlayer);
+            SetFigurePosition(_playersManager.FirstPlayer);
+            SetFigurePosition(_playersManager.SecondPlayer);
 
             for (int i = 1; i <= INITIAL_APPLES_COUNT; i++)
             {

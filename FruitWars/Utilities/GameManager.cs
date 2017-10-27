@@ -59,7 +59,7 @@ namespace FruitWars.Utilities
                 MakeAMove(SecondPlayer);
             }
 
-            FinilizeGame();
+            FinalizeGame();
         }
 
         private void MakeAMove(Warrior player)
@@ -101,7 +101,7 @@ namespace FruitWars.Utilities
             }
         }
 
-        private void FinilizeGame()
+        private void FinalizeGame()
         {
             if (_game.Status == GameStatusType.Draw)
             {

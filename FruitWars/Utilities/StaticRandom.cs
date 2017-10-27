@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FruitWars.Utilities
 {
-    class StaticRandom
+    public class StaticRandom
     {
         private static int _seed;
 

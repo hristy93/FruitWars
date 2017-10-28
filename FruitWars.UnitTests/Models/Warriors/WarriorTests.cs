@@ -13,7 +13,15 @@ namespace FruitWars.Models.Warriors.Tests
     [TestClass()]
     public class WarriorTests
     {
-        private Warrior _warrior = new Warrior() { Position = new Point() { X = 3, Y = 5 } };
+        private Warrior _warrior;
+
+        #region Tests initialize and cleanup
+        [TestInitialize]
+        public void InitializeTest()
+        {
+            _warrior = new Warrior() { Position = new Point() { X = 3, Y = 5 } };
+        }
+        #endregion
 
         [TestMethod]
         public void WarriorIntoDeprecatedZoneTest()
@@ -44,7 +52,11 @@ namespace FruitWars.Models.Warriors.Tests
         [TestMethod()]
         public void WarriorMoveLeftTest()
         {
-            Point point = new Point() { X = 3, Y = 5 };
+            Point point = new Point()
+            {
+                X = 3,
+                Y = 5
+            };
             point.Y -= 1;
             _warrior.Move(DirectionType.Left);
             Assert.AreEqual(_warrior.Position, point);
@@ -53,7 +65,11 @@ namespace FruitWars.Models.Warriors.Tests
         [TestMethod()]
         public void WarriorMoveRightTest()
         {
-            Point point = new Point() { X = 3, Y = 5 };
+            Point point = new Point()
+            {
+                X = 3,
+                Y = 5
+            };
             point.Y += 1;
             _warrior.Move(DirectionType.Right);
             Assert.AreEqual(_warrior.Position, point);
@@ -62,7 +78,10 @@ namespace FruitWars.Models.Warriors.Tests
         [TestMethod()]
         public void WarriorInvalidMoveDownTest()
         {
-            _warrior.Position = new Point() { X = 7 };
+            _warrior.Position = new Point()
+            {
+                X = 7
+            };
             Assert.IsFalse(_warrior.Move(DirectionType.Down));
         }
 
@@ -70,21 +89,30 @@ namespace FruitWars.Models.Warriors.Tests
         [TestMethod()]
         public void WarriorInvalidMoveUpTest()
         {
-            _warrior.Position = new Point() { X = 0 };
+            _warrior.Position = new Point()
+            {
+                X = 0
+            };
             Assert.IsFalse(_warrior.Move(DirectionType.Up));
         }
 
         [TestMethod()]
         public void WarriorInvalidMoveLeftTest()
         {
-            _warrior.Position = new Point() { Y = 0 };
+            _warrior.Position = new Point()
+            {
+                Y = 0
+            };
             Assert.IsFalse(_warrior.Move(DirectionType.Left));
         }
 
         [TestMethod()]
         public void WarriorInvalidMoveRightTest()
         {
-            _warrior.Position = new Point() { Y = 7 };
+            _warrior.Position = new Point()
+            {
+                Y = 7
+            };
             Assert.IsFalse(_warrior.Move(DirectionType.Right));
         }
 

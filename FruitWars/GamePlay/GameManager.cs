@@ -2,13 +2,14 @@
 using FruitWars.Models;
 using FruitWars.Models.Fruits;
 using FruitWars.Models.Warriors;
+using FruitWars.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace FruitWars.Utilities
+namespace FruitWars.GamePlay
 {
     public class GameManager
     {
@@ -31,7 +32,7 @@ namespace FruitWars.Utilities
             _playersManager = playersManager;
         }
 
-        public void StartGame()
+        public void StartGame(bool ForTestOly = false)
         {
             InitiatializeGameState();
             _gridManager.InitiateGrid();
@@ -42,7 +43,8 @@ namespace FruitWars.Utilities
             _gridManager.PrintGrid();
             _playersManager.PrintPlayersStatistics();
 
-            RunGame();
+            if(!ForTestOly)
+                RunGame();
         }
 
         private void InitiatializeGameState()
@@ -53,16 +55,17 @@ namespace FruitWars.Utilities
 
         private void RunGame()
         {
+            ConsoleWrapper consoleWrapper = new ConsoleWrapper();
             while (_game.Status == GameStatusType.Running)
             {
-                MakeATurn(_playersManager.FirstPlayer);
-                MakeATurn(_playersManager.SecondPlayer);
+                MakeATurn(_playersManager.FirstPlayer, consoleWrapper);
+                MakeATurn(_playersManager.SecondPlayer, consoleWrapper);
             }
 
             FinalizeGame();
         }
 
-        private void MakeATurn(Warrior player)
+        private void MakeATurn(Warrior player, ConsoleWrapper consoleWrapper)
         {
             (int x, int y) oldPosition;
             int currentSpeedPoints;
@@ -70,12 +73,11 @@ namespace FruitWars.Utilities
 
             currentSpeedPoints = player.SpeedPoints;
 
-
-            Console.WriteLine($"Player{player.Symbol}, make a move please!");
             while (moves < currentSpeedPoints && _game.Status == GameStatusType.Running)
             {
                 oldPosition = (player.Position.X, player.Position.Y);
-                DirectionType directionType = _playersManager.GetPlayerDirection();
+                Console.WriteLine($"Player{player.Symbol}, make a move please!");
+                DirectionType directionType = _playersManager.GetPlayerDirection(consoleWrapper);
 
                 if (player.Move(directionType))
                 {
@@ -96,7 +98,7 @@ namespace FruitWars.Utilities
                 }
                 else
                 {
-                    Console.WriteLine("Wrong input! Please choose a direction that you can move.");
+                    Console.WriteLine("Wrong input! Please choose a correct direction.");
                 }
             }
         }

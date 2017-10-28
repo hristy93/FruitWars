@@ -52,8 +52,8 @@ namespace FruitWars.Models
         /// Checks if the Point point is into the deprecated zone
         /// </summary>
         /// <param name="point">Point</param>
-        /// <param name="Distance">Deprecated zone length</param>
-        /// <returns>True if P is into deprecated zone</returns>
+        /// <param name="distance">Deprecated zone length</param>
+        /// <returns>True if point is into deprecated zone</returns>
         public bool IsIntoDeprecatedZone(Point point, int distance)
         {
             if (point == null) return false;

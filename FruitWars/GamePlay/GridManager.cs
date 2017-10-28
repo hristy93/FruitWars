@@ -1,11 +1,12 @@
 ﻿using FruitWars.GamePlay;
 using FruitWars.Models;
 using FruitWars.Models.Warriors;
+using FruitWars.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FruitWars.Utilities
+namespace FruitWars.GamePlay
 {
     public class GridManager
     {

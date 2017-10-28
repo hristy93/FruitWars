@@ -1,12 +1,13 @@
 ﻿using FruitWars.GamePlay;
 using FruitWars.Models;
 using FruitWars.Models.Warriors;
+using FruitWars.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace FruitWars.Utilities
+namespace FruitWars.GamePlay
 {
     public class PlayersManager
     {
@@ -15,7 +16,7 @@ namespace FruitWars.Utilities
 
         public void PrintPlayerScores(Warrior player)
         {
-            Console.WriteLine($"Player{player.Symbol}: {player.PowerPoints} Power; {player.SpeedPoints} Speed");
+            Console.WriteLine($"Player{player?.Symbol}: {player?.PowerPoints} Power; {player?.SpeedPoints} Speed");
         }
 
         public void ChooseWarriors()
@@ -67,13 +68,13 @@ namespace FruitWars.Utilities
             return warrior;
         }
 
-        public DirectionType GetPlayerDirection()
+        public DirectionType GetPlayerDirection(IConsoleWrapper consoleWrapper)
         {
             bool isInputValid = true;
             DirectionType directionType = DirectionType.Down;
             do
             {
-                ConsoleKeyInfo keyInfo = Console.ReadKey();
+                ConsoleKeyInfo keyInfo = consoleWrapper.ReadKey();
                 switch (keyInfo.Key)
                 {
                     case ConsoleKey.UpArrow:
@@ -94,7 +95,8 @@ namespace FruitWars.Utilities
                         break;
                     default:
                         isInputValid = false;
-                        Console.WriteLine("\nWrong input! Please press some of the arrow keys.");
+                        Console.WriteLine(Environment.NewLine);
+                        Console.WriteLine("Wrong input! Please press some of the arrow keys.");
                         break;
                 }
             } while (!isInputValid);
@@ -104,6 +106,10 @@ namespace FruitWars.Utilities
 
         public void EatFruits(Warrior player, List<Figure> figures)
         {
+            if (player == null)
+                throw new ArgumentNullException("player is NULL");
+            if (figures == null)
+                throw new ArgumentNullException("figures are NULL");
             Figure figure = figures.FirstOrDefault(x => x is Fruit && x.Position == player.Position);
             if (figure is Fruit)
             {

@@ -109,7 +109,7 @@ namespace FruitWars.GamePlay
             if (player == null)
                 throw new ArgumentNullException("player is NULL");
             if (figures == null)
-                throw new ArgumentNullException("figures are NULL");
+                throw new ArgumentNullException("figures is NULL");
             Figure figure = figures.FirstOrDefault(x => x is Fruit && x.Position == player.Position);
             if (figure is Fruit)
             {

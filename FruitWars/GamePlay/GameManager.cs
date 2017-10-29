@@ -32,7 +32,7 @@ namespace FruitWars.GamePlay
             _playersManager = playersManager;
         }
 
-        public void StartGame(bool ForTestOly = false)
+        public void StartGame(bool ForTestOnly = false)
         {
             InitiatializeGameState();
             _gridManager.InitiateGrid();
@@ -43,7 +43,7 @@ namespace FruitWars.GamePlay
             _gridManager.PrintGrid();
             _playersManager.PrintPlayersStatistics();
 
-            if(!ForTestOly)
+            if(!ForTestOnly)
                 RunGame();
         }
 
@@ -55,7 +55,7 @@ namespace FruitWars.GamePlay
 
         private void RunGame()
         {
-            ConsoleWrapper consoleWrapper = new ConsoleWrapper();
+            IConsoleWrapper consoleWrapper = new ConsoleWrapper();
             while (_game.Status == GameStatusType.Running)
             {
                 MakeATurn(_playersManager.FirstPlayer, consoleWrapper);
@@ -65,22 +65,28 @@ namespace FruitWars.GamePlay
             FinalizeGame();
         }
 
-        private void MakeATurn(Warrior player, ConsoleWrapper consoleWrapper)
+        private void MakeATurn(Warrior player, IConsoleWrapper consoleWrapper)
         {
             (int x, int y) oldPosition;
             int currentSpeedPoints;
             int moves = 0;
+            bool isInputValid = true;
 
             currentSpeedPoints = player.SpeedPoints;
 
             while (moves < currentSpeedPoints && _game.Status == GameStatusType.Running)
             {
                 oldPosition = (player.Position.X, player.Position.Y);
-                Console.WriteLine($"Player{player.Symbol}, make a move please!");
+                if (isInputValid)
+                {
+                    Console.WriteLine($"Player{player.Symbol}, make a move please!");
+                }
+
                 DirectionType directionType = _playersManager.GetPlayerDirection(consoleWrapper);
 
                 if (player.Move(directionType))
                 {
+                    isInputValid = true;
                     _playersManager.EatFruits(player, Figures);
 
                     _gridManager.DisplayOnGrid(oldPosition);
@@ -99,6 +105,7 @@ namespace FruitWars.GamePlay
                 else
                 {
                     Console.WriteLine("Wrong input! Please choose a correct direction.");
+                    isInputValid = false;
                 }
             }
         }
@@ -132,13 +139,15 @@ namespace FruitWars.GamePlay
             do
             {
                 var userInput = Console.ReadLine();
-                switch (userInput[0])
+                switch (userInput)
                 {
-                    case 'y':
+                    case "y":
                         Console.WriteLine(Environment.NewLine);
                         StartGame();
+                        isInputValid = true;
                         break;
-                    case 'n':
+                    case "n":
+                        isInputValid = true;
                         break;
                     default:
                         isInputValid = false;

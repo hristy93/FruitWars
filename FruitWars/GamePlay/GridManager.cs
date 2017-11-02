@@ -1,4 +1,5 @@
 ﻿using FruitWars.GamePlay;
+using FruitWars.Interfaces;
 using FruitWars.Models;
 using FruitWars.Models.Warriors;
 using FruitWars.Utilities;
@@ -8,12 +9,8 @@ using System.Text;
 
 namespace FruitWars.GamePlay
 {
-    public class GridManager
+    public class GridManager : IGridManager
     {
-        public const int PLAYERS_COUNT = 2;
-        public const int INITIAL_PEARS_COUNT = 3;
-        public const int INITIAL_APPLES_COUNT = 4;
-
         private Random _random = StaticRandom.Instance;
         private char[,] _grid;
 

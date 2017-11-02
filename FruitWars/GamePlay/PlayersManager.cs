@@ -1,4 +1,5 @@
 ﻿using FruitWars.GamePlay;
+using FruitWars.Interfaces;
 using FruitWars.Models;
 using FruitWars.Models.Warriors;
 using FruitWars.Utilities;
@@ -9,8 +10,11 @@ using System.Text;
 
 namespace FruitWars.GamePlay
 {
-    public class PlayersManager
+    public class PlayersManager : IPlayersManager
     {
+        private const int WARRIOR_TYPES_MIN_COUNT = 1;
+        private const int WARRIOR_TYPES_MAX_COUNT = 3;
+
         public Warrior FirstPlayer { get; private set; }
         public Warrior SecondPlayer { get; private set; }
 
@@ -37,7 +41,8 @@ namespace FruitWars.GamePlay
             {
                 var userInput = Console.ReadLine();
 
-                if (int.TryParse(userInput, out warriorType) && warriorType > 0 && warriorType < 4)
+                if (int.TryParse(userInput, out warriorType) 
+                    && warriorType >= WARRIOR_TYPES_MIN_COUNT && warriorType <= WARRIOR_TYPES_MAX_COUNT)
                 {
                     isInputValid = true;
                 }
@@ -107,13 +112,20 @@ namespace FruitWars.GamePlay
         public void EatFruits(Warrior player, List<Figure> figures)
         {
             if (player == null)
-                throw new ArgumentNullException("player is NULL");
-            if (figures == null)
-                throw new ArgumentNullException("figures is NULL");
-            Figure figure = figures.FirstOrDefault(x => x is Fruit && x.Position == player.Position);
-            if (figure is Fruit)
             {
-                player.EatFruit(figure as Fruit);
+                throw new ArgumentNullException("player is NULL");
+            }
+                
+
+            if (figures == null)
+            {
+                throw new ArgumentNullException("figures is NULL");
+            }
+                
+            Figure figure = figures.FirstOrDefault(x => x is Fruit && x.Position == player.Position);
+            if (figure is Fruit fruit)
+            {
+                player.EatFruit(fruit);
                 figures.Remove(figure);
             }
         }

@@ -1,4 +1,5 @@
 ﻿using FruitWars.GamePlay;
+using FruitWars.Interfaces;
 using FruitWars.Models;
 using FruitWars.Models.Fruits;
 using FruitWars.Models.Warriors;
@@ -11,7 +12,7 @@ using System.Text.RegularExpressions;
 
 namespace FruitWars.GamePlay
 {
-    public class GameManager
+    public class GameManager : IGameManager
     {
         public const int INITIAL_PLAYERS_MOVE_DISTANCE = 3;
         public const int INITIAL_FRUITS_MOVE_DISTANCE = 2;
@@ -19,14 +20,13 @@ namespace FruitWars.GamePlay
         public const int INITIAL_APPLES_COUNT = 4;
 
         private Game _game;
-        private GridManager _gridManager;
-        private PlayersManager _playersManager;
+        private IGridManager _gridManager;
+        private IPlayersManager _playersManager;
         private Random _random = StaticRandom.Instance;
         private const string TRIM_NAMESPACE_REGEX = @"[.\w]+\.(\w+)";
+        private List<Figure> _figures = new List<Figure>();
 
-        public List<Figure> Figures { get; set; } = new List<Figure>();
-
-        public GameManager(GridManager gridManager, PlayersManager playersManager)
+        public GameManager(IGridManager gridManager, IPlayersManager playersManager)
         {
             _gridManager = gridManager;
             _playersManager = playersManager;
@@ -50,7 +50,7 @@ namespace FruitWars.GamePlay
         private void InitiatializeGameState()
         {
             _game = new Game();
-            Figures = new List<Figure>();
+            _figures = new List<Figure>();
         }
 
         private void RunGame()
@@ -87,7 +87,7 @@ namespace FruitWars.GamePlay
                 if (player.Move(directionType))
                 {
                     isInputValid = true;
-                    _playersManager.EatFruits(player, Figures);
+                    _playersManager.EatFruits(player, _figures);
 
                     _gridManager.DisplayOnGrid(oldPosition);
                     _gridManager.DisplayOnGrid(player);
@@ -211,8 +211,8 @@ namespace FruitWars.GamePlay
             do
             {
                 figure.Position = GetPseudoRandomPosition;
-            } while (Figures.Any(x => x.IntoDeprecatedZone(figure)));
-            Figures.Add(figure);
+            } while (_figures.Any(x => x.IntoDeprecatedZone(figure)));
+            _figures.Add(figure);
            _gridManager.DisplayOnGrid(figure);
         }
 

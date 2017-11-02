@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FruitWars.Utilities
+namespace FruitWars.Interfaces
 {
     /// <summary>
     /// https://stackoverflow.com/questions/13963369/how-to-unit-test-this-function

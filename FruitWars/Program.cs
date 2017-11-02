@@ -1,6 +1,5 @@
 ﻿using FruitWars.GamePlay;
-using FruitWars.Utilities;
-using System;
+using FruitWars.Interfaces;
 
 namespace FruitWars
 {
@@ -8,9 +7,9 @@ namespace FruitWars
     {
         static void Main(string[] args)
         {
-            GridManager gridManager = new GridManager();
-            PlayersManager playersManager = new PlayersManager();
-            GameManager gameManager = new GameManager(gridManager, playersManager);
+            IGridManager gridManager = new GridManager();
+            IPlayersManager playersManager = new PlayersManager();
+            IGameManager gameManager = new GameManager(gridManager, playersManager);
             gameManager.StartGame();
         }
     }

@@ -56,7 +56,11 @@ namespace FruitWars.Models
         /// <returns>True if point is into deprecated zone</returns>
         public bool IsIntoDeprecatedZone(Point point, int distance)
         {
-            if (point == null) return false;
+            if (point == null)
+            {
+                return false;
+            }
+
             try
             {
                 int manhattanDistance = Math.Abs(X - point.X) + Math.Abs(Y - point.Y);

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using FruitWars.Models.Fruits;
 using FruitWars.UnitTests.Utilities;
 using FruitWars.GamePlay;
+using FruitWars.Interfaces;
 
 namespace FruitWars.UnitTests.GamePlay
 {

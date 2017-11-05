@@ -1,4 +1,5 @@
 ﻿using FruitWars.GamePlay;
+using FruitWars.Interfaces;
 using FruitWars.Models;
 using FruitWars.Models.Warriors;
 using FruitWars.Utilities;
@@ -13,19 +14,22 @@ namespace FruitWars.UnitTests.GamePlay
     [TestClass]
     public class GameManagerTests
     {
-        private GameManager _gameManager;
-        private PlayersManager _playersManager;
-        private GridManager _gridManager;
+        private IGameManager _gameManager;
+        private IPlayersManager _playersManager;
+        private IGridManager _gridManager;
+        private IUserInterfaceManager _userInterfaceManager;
         private StringWriter _stringWriter;
+        
 
         #region Tests initialize and cleanup
         [TestInitialize]
         public void TestInitialize()
         {
             _stringWriter = new StringWriter();
-            _gridManager = new GridManager();
-            _playersManager = new PlayersManager();
-            _gameManager = new GameManager(_gridManager, _playersManager);
+            _userInterfaceManager = new UserInterfaceManager();
+            _gridManager = new GridManager(_userInterfaceManager);
+            _playersManager = new PlayersManager(_userInterfaceManager);
+            _gameManager = new GameManager(_gridManager, _playersManager, _userInterfaceManager);
         }
         #endregion
         

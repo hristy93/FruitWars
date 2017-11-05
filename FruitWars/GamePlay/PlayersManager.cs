@@ -15,13 +15,15 @@ namespace FruitWars.GamePlay
         private const int WARRIOR_TYPES_MIN_COUNT = 1;
         private const int WARRIOR_TYPES_MAX_COUNT = 3;
 
+        private IUserInterfaceManager _userInterfaceManager;
+
+        public PlayersManager(IUserInterfaceManager userInterfaceManager)
+        {
+            _userInterfaceManager = userInterfaceManager;
+        }
+
         public Warrior FirstPlayer { get; private set; }
         public Warrior SecondPlayer { get; private set; }
-
-        public void PrintPlayerScores(Warrior player)
-        {
-            Console.WriteLine($"Player{player?.Symbol}: {player?.PowerPoints} Power; {player?.SpeedPoints} Speed");
-        }
 
         public void ChooseWarriors()
         {
@@ -34,9 +36,8 @@ namespace FruitWars.GamePlay
             int warriorType;
             bool isInputValid = false;
 
-            Console.WriteLine($"Player{symbol}, please choose a warrior.");
-            Console.WriteLine("Insert 1 for turtle / 2 for monkey / 3 for pigeon");
-
+            _userInterfaceManager.DisplayChooseWarriorType(symbol);
+         
             do
             {
                 var userInput = Console.ReadLine();
@@ -48,7 +49,7 @@ namespace FruitWars.GamePlay
                 }
                 else
                 {
-                    Console.WriteLine("Wrong input! Please enter 1, 2 or 3.");
+                    _userInterfaceManager.DisplayIncorrectWarriorType();
                 }
             } while (!isInputValid);
 
@@ -100,8 +101,8 @@ namespace FruitWars.GamePlay
                         break;
                     default:
                         isInputValid = false;
-                        Console.WriteLine(Environment.NewLine);
-                        Console.WriteLine("Wrong input! Please press some of the arrow keys.");
+                        _userInterfaceManager.DisplayNewLine();
+                        _userInterfaceManager.DisplayIncorrectDirection();
                         break;
                 }
             } while (!isInputValid);
@@ -128,14 +129,6 @@ namespace FruitWars.GamePlay
                 player.EatFruit(fruit);
                 figures.Remove(figure);
             }
-        }
-
-        public void PrintPlayersStatistics()
-        {
-            Console.WriteLine(Environment.NewLine);
-            PrintPlayerScores(FirstPlayer);
-            PrintPlayerScores(SecondPlayer);
-            Console.WriteLine(Environment.NewLine);
         }
     }
 }

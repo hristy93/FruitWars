@@ -15,7 +15,5 @@ namespace FruitWars.Interfaces
         void EatFruits(Warrior player, List<Figure> figures);
         DirectionType GetPlayerDirection(IConsoleWrapper consoleWrapper);
         Warrior InputWarriorsTypes(char symbol);
-        void PrintPlayerScores(Warrior player);
-        void PrintPlayersStatistics();
     }
 }

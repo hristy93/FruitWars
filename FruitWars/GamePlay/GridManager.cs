@@ -12,10 +12,12 @@ namespace FruitWars.GamePlay
     public class GridManager : IGridManager
     {
         private Random _random = StaticRandom.Instance;
+        private IUserInterfaceManager _userInterfaceManager;
         private char[,] _grid;
 
-        public GridManager()
+        public GridManager(IUserInterfaceManager userInterfaceManager)
         {
+            _userInterfaceManager = userInterfaceManager;
             _grid = new char[Game.MAX_CELLS_COUNT, Game.MAX_CELLS_COUNT];
         }
 
@@ -33,18 +35,19 @@ namespace FruitWars.GamePlay
 
         public void PrintGrid()
         {
-            Console.WriteLine(Environment.NewLine);
+            _userInterfaceManager.DisplayNewLine();
+            string cell = "";
 
             for (int i = 0; i < Game.MAX_CELLS_COUNT; i++)
             {
                 for (int j = 0; j < Game.MAX_CELLS_COUNT; j++)
                 {
-                    Console.Write($"{_grid[i, j]} ");
+                    cell = _grid[i, j].ToString();
+                    _userInterfaceManager.DisplayGridCell(cell);
                 }
 
-                Console.WriteLine("\n");
+                _userInterfaceManager.DisplayNewLine();
             }
-
         }
 
         public void DisplayOnGrid(Figure figure)

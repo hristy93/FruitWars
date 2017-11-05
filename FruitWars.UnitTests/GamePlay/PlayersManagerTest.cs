@@ -15,14 +15,16 @@ namespace FruitWars.UnitTests.GamePlay
     [TestClass]
     public class PlayersManagerTest
     {
-        private PlayersManager _playersManager;
+        private IPlayersManager _playersManager;
+        private IUserInterfaceManager _userInterfaceManager;
         private StringWriter _stringWriter;
 
         #region Tests initialize and cleanup
         [TestInitialize]
         public void InitializeTest()
         {
-            _playersManager = new PlayersManager();
+            _userInterfaceManager = new UserInterfaceManager();
+            _playersManager = new PlayersManager(_userInterfaceManager);
             _stringWriter = new StringWriter();
         }
         #endregion
@@ -51,7 +53,7 @@ namespace FruitWars.UnitTests.GamePlay
             Assert.IsInstanceOfType(_playersManager.FirstPlayer, typeof(Turtle));
             Assert.IsInstanceOfType(_playersManager.SecondPlayer, typeof(Pigeon));
             Console.SetOut(_stringWriter);
-            _playersManager.PrintPlayersStatistics();
+            _userInterfaceManager.PrintPlayersStatistics(_playersManager.FirstPlayer, _playersManager.SecondPlayer);
             StringAssert.Contains(_stringWriter.ToString(), "Player1: 3 Power; 1 Speed\r\nPlayer2: 1 Power; 3 Speed");
         }
 
@@ -68,7 +70,7 @@ namespace FruitWars.UnitTests.GamePlay
         [TestMethod]
         public void PrintPlayerScoresTestNULL()
         {
-            _playersManager.PrintPlayerScores(null);
+            _userInterfaceManager.PrintPlayerInformation(null);
         }
 
         [TestMethod]

@@ -3,34 +3,37 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FruitWars.Models.Warriors;
 using FruitWars.GamePlay;
+using FruitWars.Interfaces;
 
 namespace FruitWars.UnitTests.GamePlay
 {
     [TestClass]
     public class GridManagerTest
     {
-        private GridManager _gridManager;
+        private IGridManager _gridManager;
+        private IUserInterfaceManager _userInterfaceManager;
 
         #region Tests initialize and cleanup
         [TestInitialize]
         public void InitializeTest()
         {
-            _gridManager = new GridManager();
+            _userInterfaceManager = new UserInterfaceManager();
+            _gridManager = new GridManager(_userInterfaceManager);
         }
         #endregion
 
-        public GridManager CreateGridManager()
+        public IGridManager CreateGridManager()
         {
-            GridManager target = new GridManager();
+            IGridManager target = new GridManager(_userInterfaceManager);
             return target;
         }
 
-        public void InitiateGrid(GridManager target)
+        public void InitiateGrid(IGridManager target)
         {
             target.InitiateGrid();
         }
 
-        public void DisplayOnGrid(GridManager target, Figure figure)
+        public void DisplayOnGrid(IGridManager target, Figure figure)
         {
             target.DisplayOnGrid(figure);
         }

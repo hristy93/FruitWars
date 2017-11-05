@@ -22,14 +22,15 @@ namespace FruitWars.GamePlay
         private Game _game;
         private IGridManager _gridManager;
         private IPlayersManager _playersManager;
+        private IUserInterfaceManager _userInterfaceManager;
         private Random _random = StaticRandom.Instance;
-        private const string TRIM_NAMESPACE_REGEX = @"[.\w]+\.(\w+)";
         private List<Figure> _figures = new List<Figure>();
 
-        public GameManager(IGridManager gridManager, IPlayersManager playersManager)
+        public GameManager(IGridManager gridManager, IPlayersManager playersManager, IUserInterfaceManager userInterfaceManager)
         {
             _gridManager = gridManager;
             _playersManager = playersManager;
+            _userInterfaceManager = userInterfaceManager;
         }
 
         public void StartGame(bool ForTestOnly = false)
@@ -41,7 +42,8 @@ namespace FruitWars.GamePlay
             PlaceFigures();
 
             _gridManager.PrintGrid();
-            _playersManager.PrintPlayersStatistics();
+            _userInterfaceManager.PrintPlayersStatistics(_playersManager.FirstPlayer,
+                _playersManager.SecondPlayer);
 
             if(!ForTestOnly)
                 RunGame();
@@ -79,7 +81,7 @@ namespace FruitWars.GamePlay
                 oldPosition = (player.Position.X, player.Position.Y);
                 if (isInputValid)
                 {
-                    Console.WriteLine($"Player{player.Symbol}, make a move please!");
+                    _userInterfaceManager.DisplayMakeAMove(player);
                 }
 
                 DirectionType directionType = _playersManager.GetPlayerDirection(consoleWrapper);
@@ -100,11 +102,12 @@ namespace FruitWars.GamePlay
                     }
 
                     _gridManager.PrintGrid();
-                    _playersManager.PrintPlayersStatistics();
+                    _userInterfaceManager.PrintPlayersStatistics(_playersManager.FirstPlayer,
+                        _playersManager.SecondPlayer);
                 }
                 else
                 {
-                    Console.WriteLine("Wrong input! Please choose a correct direction.");
+                    _userInterfaceManager.DisplayOutOfTheBoundsDirection();
                     isInputValid = false;
                 }
             }
@@ -112,29 +115,25 @@ namespace FruitWars.GamePlay
 
         private void FinalizeGame()
         {
-            Console.WriteLine(Environment.NewLine);
+            _userInterfaceManager.DisplayNewLine();
 
             if (_game.Status == GameStatusType.Draw)
             {
-                Console.WriteLine("Draw game.");
+                _userInterfaceManager.DisplayDrawGame();
             }
             else
             {            
                 _gridManager.PrintGrid();
-                Console.WriteLine(Environment.NewLine);
-                Console.WriteLine($"Player {_game.Winner.Symbol} wins the game.");
-                Console.WriteLine($"{Regex.Replace(_game.Winner.GetType().Name, TRIM_NAMESPACE_REGEX, "$1")} with Power: {_game.Winner.PowerPoints}"
-                        + $", Speed: {_game.Winner.SpeedPoints}");
-                Console.WriteLine();
+                _userInterfaceManager.DisplayWinningPlayerInforamation(_game);
             }
 
-            ProposeRestart();
+            ProposeRematch();
         }
 
-        private void ProposeRestart()
+        private void ProposeRematch()
         {
             bool isInputValid = true;
-            Console.WriteLine("Do you want to start a rematch? (y/n)");
+            _userInterfaceManager.DisplayRequestRematch();
 
             do
             {
@@ -142,7 +141,7 @@ namespace FruitWars.GamePlay
                 switch (userInput)
                 {
                     case "y":
-                        Console.WriteLine(Environment.NewLine);
+                        _userInterfaceManager.DisplayNewLine();
                         StartGame();
                         isInputValid = true;
                         break;
@@ -151,7 +150,7 @@ namespace FruitWars.GamePlay
                         break;
                     default:
                         isInputValid = false;
-                        Console.WriteLine("Wrong input! Please press y or n.");
+                        _userInterfaceManager.DisplayIncorrectRematchInput();
                         break;
                 }
             } while (!isInputValid);
